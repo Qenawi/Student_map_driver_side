@@ -32,6 +32,7 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
     private static MapLocalSource INSTANCE = null;
     private final MapboxMap mapboxMap;
     private final MapView mapView;
+    private Marker car;
     private DirectionsRoute currentRoute;
     private CompositeDisposable Cdisposable;
     private List<LatLng> Route_Points = new ArrayList<>(); // PolyLine
@@ -49,6 +50,7 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
         Cdisposable = new CompositeDisposable();
         studentToMarker = new HashMap<>();
         animationutill = new Animationutill(this);
+
     }
 
     /*
@@ -126,6 +128,9 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
         } else {
             navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute);
         }
+
+        car = mapboxMap.addMarker(new MarkerOptions().position(Route_Points.get(0)));
+
         navigationMapRoute.addRoute(currentRoute);
         //     Add_End_Route_Point();
 
@@ -145,7 +150,9 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
     }
 
     @Override
-    public void animiUtil_Update(@NotNull LatLng on) {
-        Timber.tag("MQOQO").v(on.toString());
+    public void animiUtil_Update(@NotNull LatLng on)
+    {
+        car.setPosition(on);
+
     }
 }

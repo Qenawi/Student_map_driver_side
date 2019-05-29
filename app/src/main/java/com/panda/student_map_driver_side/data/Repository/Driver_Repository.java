@@ -13,6 +13,7 @@ import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.panda.student_map_driver_side.LocationJop;
+import com.panda.student_map_driver_side.Location_updater_utill;
 import com.panda.student_map_driver_side.locationJopBroadCastReciver;
 import io.reactivex.Observable;
 
@@ -45,6 +46,7 @@ public class Driver_Repository implements PresnterToRepoContract.DriverRemoteDat
     public static Driver_Repository getInstance(boolean Mock, @NonNull DriverRemoteDataSource mDriverDataSource, @NonNull MapLocalSource mMapSource, Context mcont) {
         if (INSTANCE == null) {
             INSTANCE = new Driver_Repository(Mock, mDriverDataSource, mMapSource, mcont);
+
         }
         return INSTANCE;
     }
@@ -86,12 +88,7 @@ public class Driver_Repository implements PresnterToRepoContract.DriverRemoteDat
     public void SendLocationUpdates() {
         // Add broadCast Receiver To Pull Location Update From Jop Location
         try {
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.panda.student_map_driver_side.ACTION_CUSTOM");
-            locationJopBroadCastReciver myReceiver = new locationJopBroadCastReciver();
-            myReceiver.mHockUpListner(mMapSource::animate_Vichle_To_Point);
-            mContex.getApplicationContext().registerReceiver(myReceiver, filter);
-
+            Location_updater_utill.INSTANCE.mHockUpListner(mMapSource::animate_Vichle_To_Point);
             // Launch Jop To  Automate Data Sending  ...
             JobScheduler jobScheduler = (JobScheduler) mContex
                     .getSystemService(JOB_SCHEDULER_SERVICE);

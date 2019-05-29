@@ -25,7 +25,5 @@ class locationJopBroadCastReciver : BroadcastReceiver() {
         }
     }
 
-    fun mHockUpListner(mC: Driver_Contract.LocationJopToRepoSotory) {
-        mCallBack = mC
-    }
+
 }

@@ -88,6 +88,7 @@ class LocationJop : JobService() {
                     //stop
                 } else {
                     notfy_server("${mPoints!![mCounter].latitude},${mPoints!![mCounter].longitude}")
+                    Location_updater_utill.mPostUpdate(mPoints!![mCounter])
                     mCounter += 1
                     sendLocationUpdateMock()
                 }
@@ -99,12 +100,6 @@ class LocationJop : JobService() {
     private fun notfy_server(s: String) {
 
         // Send local broadcast
-        val intent: Intent = Intent("com.panda.student_map_driver_side.ACTION_CUSTOM")
-        intent.setComponent(ComponentName(packageName,"com.panda.student_map_driver_side.locationJopBroadCastReciver"))
-        intent.putExtra("mDataeee",s)
-        val localBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(this.applicationContext)
-        localBroadcastManager.sendBroadcast(intent)
-
         val query = databaseReference!!.child(NAVIGATION).child(ROUTEID).child(Currnt_Pus_Location)
         query.setValue(s).addOnSuccessListener { Log.v(TAG, "Sucess { $s }") }
     }

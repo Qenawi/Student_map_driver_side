@@ -11,12 +11,18 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class Animationutill(val mcallBack: updateLocationMainThread) {
     private var NextFloat_Bearing: Float = 90f
-    private var ArrayLis: ArrayList<LatLng>? = null
+    private var ArrayLis: ArrayList<LatLng>? = ArrayList<LatLng>()
     private var mCount: AtomicInteger = AtomicInteger(0)
     private var isAnimating: AtomicBoolean = AtomicBoolean(false)
-    fun addPoint(mNewlocation: LatLng) {
+    fun addPoint(mNewlocation: LatLng)
+    {
         ArrayLis!!.add(mNewlocation)
-        if (isAnimating.get()) {
+        if (ArrayLis!!.size < 2) {
+            return
+        }
+        if (isAnimating.get())
+        {
+            return
 // Do No Thing
         } else {
             startAnimation()
@@ -42,9 +48,14 @@ class Animationutill(val mcallBack: updateLocationMainThread) {
 
     private var valueAnimator: ValueAnimator? = null
 
-    private fun animate() {
+    private fun animate()
+    {
+        if (mCount.get()>=ArrayLis!!.size||mCount.get()+1>=ArrayLis!!.size){return}
         var startPosition: LatLng = ArrayLis!![mCount.get()]
-        var endPosition: LatLng = ArrayLis!![mCount.get() + 1]
+        Log.v("mCount",mCount.get().toString())
+        mCount.set(mCount.get() + 1)
+        Log.v("mCount",mCount.get().toString())
+        var endPosition: LatLng = ArrayLis!![mCount.get()]
         valueAnimator = ValueAnimator.ofFloat(0f, 1f)
         valueAnimator!!.duration = 500
         valueAnimator!!.interpolator = LinearInterpolator()
@@ -111,14 +122,11 @@ class Animationutill(val mcallBack: updateLocationMainThread) {
     }
 
     interface updateLocationMainThread {
-        fun animiUtil_Update(on: LatLng) {
-
-        }
+        fun animiUtil_Update(on: LatLng) {}
     }
 
-    fun   destroyInstance()
-    {
-         if (valueAnimator!=null)
+    fun destroyInstance() {
+        if (valueAnimator != null)
             valueAnimator!!.removeAllListeners()
     }
 }

@@ -10,8 +10,7 @@ import timber.log.Timber;
 
 import java.util.concurrent.TimeUnit;
 
-public class Driver_presnter implements Driver_Contract.Presenter
-{
+public class Driver_presnter implements Driver_Contract.Presenter {
     private final Driver_Contract.View mView;
     private final Driver_Repository mRepository;
     private static Driver_presnter INSTANCE;
@@ -63,11 +62,13 @@ public class Driver_presnter implements Driver_Contract.Presenter
             @Override
             public void accept() {
                 mRepository.add_Marker(Location, id);
+                mRepository.notifyStudent("accepted", id);
                 // let student know that His / her Request is Accepted Or Rejected
             }
 
             @Override
             public void refuse() {
+                mRepository.notifyStudent("rejected", id);
 
             }
         });

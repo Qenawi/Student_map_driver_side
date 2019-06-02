@@ -13,10 +13,10 @@ android {
     defaultConfig
             {
                 applicationId "com.panda.student_map_driver_side"
-                minSdkVersion 19
+                minSdkVersion 21
                 targetSdkVersion 28
-                versionCode 1
-                versionName "1.0"
+                versionCode 2
+                versionName "1.1"
                 multiDexEnabled true
                 testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
             }
@@ -47,6 +47,7 @@ dependencies {
     // Lifecycle arch
     implementation root.GoogleLifeArchDependancies.runtime
     implementation root.GoogleLifeArchDependancies.extension
+    implementation 'com.google.firebase:firebase-auth:16.0.5'
     annotationProcessor root.GoogleLifeArchDependancies.compiler
 
     // Room
@@ -80,6 +81,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     //noinspection GradleDependency
     implementation 'com.google.firebase:firebase-database:16.0.6'
+
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
     implementation root.developerDependancies.multidex
     // RxLocation

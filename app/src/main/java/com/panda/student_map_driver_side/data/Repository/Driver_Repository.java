@@ -78,6 +78,12 @@ public class Driver_Repository implements PresnterToRepoContract.DriverRemoteDat
         );
     }
 
+
+  public   void notifyStudent(String Response, String id) {
+        mDriverDataSource.notifyStudent(Response, id);
+    }
+
+
     @Override
     public void hokUpListners(@NonNull final HockUpListnersResponse mCallBack) {
         mDriverDataSource.initListners(mCallBack);

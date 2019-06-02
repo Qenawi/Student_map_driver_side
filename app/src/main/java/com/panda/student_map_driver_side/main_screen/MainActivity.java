@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-           recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(new SlideInUpAnimator());
         recyclerView.getItemAnimator().setAddDuration(800);
         recyclerView.getItemAnimator().setRemoveDuration(500);
@@ -122,5 +122,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
 }

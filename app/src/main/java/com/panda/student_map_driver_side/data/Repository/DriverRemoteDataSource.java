@@ -27,9 +27,8 @@ public class DriverRemoteDataSource {
     private DatabaseReference databaseReference;
     private static final String NAVIGATION = "Navigation";
     private static final String PICKUPREQUEST = "PickupRequst";
-    private String ROUTEID = "301";
+    private String ROUTEID ;
     private static final String TAG = "DIRVERREPO";
-    private static final String RequiredStatus = "pending";
     @SuppressLint("StaticFieldLeak")
     private static DriverRemoteDataSource INiSTANCE = null;
     private Context context;
@@ -78,40 +77,44 @@ public class DriverRemoteDataSource {
         Confermation_Value_Event_Listner = query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 PickupRequst pickupRequst = dataSnapshot.getValue(PickupRequst.class);
-                LatLng latLng = null;
-                try {
-                    String arr[] = pickupRequst.getLocation().split(",");
-                    latLng = new LatLng(Float.valueOf(arr[0]), Float.valueOf(arr[1]));
+                if (pickupRequst != null && pickupRequst.getState().equals("pending"))
+                {
+                    LatLng latLng = null;
+                    try {
+                        String arr[] = pickupRequst.getLocation().split(",");
+                        latLng = new LatLng(Float.valueOf(arr[0]), Float.valueOf(arr[1]));
 
-                } catch (Exception e) {
-                    Timber.tag(TAG).v(e);
-                    latLng = new LatLng(0.0, 0.0);
-                } finally {
-                    mRequests_callback.IncomingRequest(latLng, dataSnapshot.getKey());
-                    Timber.tag(TAG).v(dataSnapshot.getKey());
+                    } catch (Exception e) {
+                        Timber.tag(TAG).v(e);
+                        latLng = new LatLng(0.0, 0.0);
+                    } finally {
+                        mRequests_callback.IncomingRequest(latLng, dataSnapshot.getKey());
+                        Timber.tag(TAG).v(dataSnapshot.getKey());
+                    }
                 }
-
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
+            {
                 PickupRequst pickupRequst = dataSnapshot.getValue(PickupRequst.class);
                 LatLng latLng = null;
                 try {
                     String arr[] = pickupRequst.getLocation().split(",");
                     latLng = new LatLng(Float.valueOf(arr[0]), Float.valueOf(arr[1]));
 
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     Timber.tag(TAG).v(e);
                     latLng = new LatLng(0.0, 0.0);
                 } finally {
                     mRequests_callback.IncomingRequest(latLng, dataSnapshot.getKey());
                     Timber.tag(TAG).v(dataSnapshot.getKey());
                 }
-
-            }
-
+                }
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
@@ -128,6 +131,12 @@ public class DriverRemoteDataSource {
             }
         });
 
+    }
+
+    void notifyStudent(String Response,String id)
+    {
+         databaseReference.child(NAVIGATION).child(ROUTEID).child(PICKUPREQUEST).child(id).
+                 child("state").setValue(Response);
     }
 
     public static void destroyInstance() {

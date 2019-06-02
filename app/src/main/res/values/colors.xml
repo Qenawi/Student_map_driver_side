@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#09c6df</color>
+    <color name="colorPrimaryDark">#292b3d</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="graylight">#fafafa</color>
+    <color name="startblue">#09c6df</color>
+    <color name="endblue">#09c6df</color>
+    <color name="text">#034f69</color>
+    <color name="btsignin">#1fbad6</color>
+    <color name="btrigster">#83848c</color>
+    <color name="text1">#0a091b</color>
+    <color name="baserelasecolor">#212121</color>
+    <color name="basepresscolor">#FAFAFA</color>
+    <color name="ballrelasecolor">#212121</color>
+
 </resources>

@@ -1,17 +1,23 @@
 package com.panda.student_map_driver_side.data.Repository;
 
 import android.annotation.SuppressLint;
+import android.graphics.BitmapFactory;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.core.constants.Constants;
+import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute;
 import com.panda.student_map_driver_side.R;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -32,7 +38,7 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
     private static MapLocalSource INSTANCE = null;
     private final MapboxMap mapboxMap;
     private final MapView mapView;
-    private Marker car;
+    private GeoJsonSource car;
     private DirectionsRoute currentRoute;
     private CompositeDisposable Cdisposable;
     private List<LatLng> Route_Points = new ArrayList<>(); // PolyLine
@@ -84,9 +90,13 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
     }
 
     @SuppressLint("LogNotTimber")
-    private void animate_Vichle_To_PointHelper(LatLng point) {
+    private void animate_Vichle_To_PointHelper(LatLng point)
+    {
         Log.v("animate To Point", "Qnqn");
-        animationutill.addPoint(point);
+
+        animiUtil_Update(point);
+    //    animationutill.addPoint(point);
+
         /*
         - x Top c current
         - on starting animation {animate from point c to point x}
@@ -129,7 +139,22 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
             navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap, R.style.NavigationMapRoute);
         }
 
-        car = mapboxMap.addMarker(new MarkerOptions().position(Route_Points.get(0)));
+
+        car = new GeoJsonSource("car_id",
+                Feature.fromGeometry(Point.fromLngLat(Route_Points.get(0).getLatitude(),
+                        Route_Points.get(0).getLatitude())));
+
+//
+        mapboxMap.getStyle().addSource(car);
+        mapboxMap.getStyle().addLayer(new SymbolLayer("layer-id", "car_id")
+                .withProperties(
+                        PropertyFactory.iconImage("car_icon_name"),
+                        PropertyFactory.iconRotate((float) 180.0),
+                        PropertyFactory.iconIgnorePlacement(true),
+                        PropertyFactory.iconAllowOverlap(true),
+                        PropertyFactory.visibility(com.mapbox.mapboxsdk.style.layers.Property.NONE)
+                ));
+
 
         navigationMapRoute.addRoute(currentRoute);
         //     Add_End_Route_Point();
@@ -152,7 +177,22 @@ public class MapLocalSource implements Animationutill.updateLocationMainThread {
     @Override
     public void animiUtil_Update(@NotNull LatLng on)
     {
-        car.setPosition(on);
+        animate_Helper_Update_Marker(on);
 
     }
+
+
+    private void animate_Helper_Update_Marker(LatLng newPos) {
+
+
+        if (mapboxMap != null && mapboxMap.getStyle() != null) {
+            mapboxMap.getStyle().getLayer("layer-id").
+                    setProperties(
+                            PropertyFactory.iconAnchor(com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_CENTER),
+                            PropertyFactory.visibility(com.mapbox.mapboxsdk.style.layers.Property.VISIBLE));// Rotation And Anchor
+        }
+        car.setGeoJson(Point.fromLngLat(newPos.getLongitude(), newPos.getLatitude()));
+    }
+
+
 }

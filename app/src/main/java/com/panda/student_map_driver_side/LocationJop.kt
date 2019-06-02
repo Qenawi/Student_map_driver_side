@@ -24,6 +24,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.internal.operators.single.SingleInternalHelper.toObservable
 import io.reactivex.internal.schedulers.IoScheduler
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.math.log
@@ -82,13 +86,18 @@ class LocationJop : JobService() {
 
         Log.v("QNQ", "Mocking Location.... $mCounter")
 
-        cd!!.add(mRequee().subscribe(
+        cd?.add(mRequee().subscribe(
             { _ ->
-                if (mCounter >= mPoints!!.size) {
-                    //stop
-                } else {
+                if (mCounter >= mPoints!!.size)
+                {
+                    Log.v(TAG, "Error")
+                }
+                else {
                     notfy_server("${mPoints!![mCounter].latitude},${mPoints!![mCounter].longitude}")
-                    Location_updater_utill.mPostUpdate(mPoints!![mCounter])
+                    GlobalScope.launch(Dispatchers.Main){
+                        Location_updater_utill.mPostUpdate(mPoints!![mCounter])
+
+                    }
                     mCounter += 1
                     sendLocationUpdateMock()
                 }
@@ -97,14 +106,22 @@ class LocationJop : JobService() {
         ))
     }
 
-    private fun notfy_server(s: String) {
+
+    private fun notfy_server(s: String)
+    {
 
         // Send local broadcast
         val query = databaseReference!!.child(NAVIGATION).child(ROUTEID).child(Currnt_Pus_Location)
         query.setValue(s).addOnSuccessListener { Log.v(TAG, "Sucess { $s }") }
     }
 
-    fun mRequee(): Observable<Long> {
-        return Observable.timer(8, TimeUnit.SECONDS).observeOn(Schedulers.io()).observeOn(Schedulers.io())
+    fun mRequee(): Observable<Long>
+
+    {
+
+        return Observable.timer(2, TimeUnit.SECONDS).observeOn(Schedulers.io()).observeOn(Schedulers.io())
+
     }
-}
+
+
+    }

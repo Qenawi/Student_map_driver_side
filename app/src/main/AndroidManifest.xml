@@ -14,7 +14,10 @@
                  tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.Driver_View"/>
 
-        <activity android:name=".main_screen.MainActivity">
+        <activity android:name=".main_screen.MainActivity"/>
+
+        <activity android:name=".Auth.RegisterActivity"/>
+        <activity android:name=".Auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

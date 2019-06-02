@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.job.JobScheduler;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import carbon.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.android.core.permissions.PermissionsListener;
@@ -39,6 +41,10 @@ import java.util.List;
 public class Driver_View extends AppCompatActivity implements PermissionsListener, Driver_Contract.View, OnMapReadyCallback {
     @BindView(R.id.mapView)
     MapView mapView;
+    @BindView(R.id.picktxt)
+    TextView picktxt;
+    @BindView(R.id.Messge_box)
+    TextView Messge_box;
     private MapboxMap mapboxMap;
     private PermissionsManager permissionsManager;// To Acquire Permission
     private Driver_presnter mPresnter = null;
@@ -51,6 +57,7 @@ public class Driver_View extends AppCompatActivity implements PermissionsListene
     private static final String Active = "active";
     private static final String DisActive = "notctive";
     private boolean IsMockLocationUpdate = false;
+    private int Total_Count=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +131,8 @@ public class Driver_View extends AppCompatActivity implements PermissionsListene
                     .setPositiveButton("Accept", (dialog, id) -> {
                         // TODO
                         dialog.dismiss();
+                        Total_Count+=1;
+                        picktxt.setText("( "+Total_Count+" )"+"Student To Pick");
                         mcall.accept();
                     }) //
                     .setNegativeButton("Decline", (dialog, id) -> {
@@ -154,6 +163,7 @@ public class Driver_View extends AppCompatActivity implements PermissionsListene
             public void onStyleLoaded(@NonNull Style style) {
                 // Map is set up and the style has loaded. Now you can add data or make other map adjustments
                 enableLocationComponent(style);
+                style.addImage(("car_icon_name"), BitmapFactory.decodeResource(getResources(), R.drawable.ic_car));
                 mPresnter = Driver_presnter.getInstance(Driver_Repository.getInstance(IsMockLocationUpdate, DriverRemoteDataSource.getInistance(Driver_View.this, String.valueOf(Selected_route_module.getLineId())), MapLocalSource.getInstance(mapboxMap, mapView), Driver_View.this), Driver_View.this);
                 initData();
             }
@@ -181,11 +191,9 @@ public class Driver_View extends AppCompatActivity implements PermissionsListene
 
         });
     }
-
     private void initData() {
         Point dest = Point.fromLngLat(31.2827528, 29.9828841);
         @SuppressLint("MissingPermission") Point origin = Point.fromLngLat(SelectedRoute.getLongitude(), SelectedRoute.getLatitude());
-
         mPresnter.getRoute(origin, dest);
     }
 }
